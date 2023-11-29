@@ -96,10 +96,7 @@ def run_bot_webhook():
 
     setup_application(app, dp, bot=bot)
 
-    try:
-        web.run_app(app, host=config.web.HOST, port=config.web.PORT)
-    except RuntimeError:
-        await setup_shutdown_events(dp=dp, bot=bot)
+    web.run_app(app, host=config.web.HOST, port=config.web.PORT)
 
 
 if __name__ == "__main__":
