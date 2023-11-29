@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "onion"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiogram = "^3.2.0"
+sqlalchemy = "^2.0.23"
+loguru = "^0.7.2"
+fluentogram = "^1.1.6"
+pydantic-settings = "^2.1.0"
+apscheduler = "4.0.0a4"
+redis = "^5.0.1"
+asyncpg = "^0.29.0"
+psycopg2-binary = "^2.9.9"
+alembic = "^1.12.1"
+argparse = "^1.4.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-asyncio = "^0.21.1"
+mypy = "^1.7.1"
+pylint = "^3.0.2"
+aiomysql = "^0.2.0"
+cryptography = "^41.0.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
