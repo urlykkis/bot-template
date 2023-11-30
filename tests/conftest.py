@@ -7,7 +7,7 @@ from src.infrastructure.settings.config import load_config
 
 from .utils.alembic import alembic_config_from_url
 
-config = load_config()
+config = load_config(env_file=".env.test")
 
 
 @pytest.fixture()
