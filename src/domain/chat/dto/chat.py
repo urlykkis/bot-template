@@ -2,21 +2,7 @@ from typing import Optional
 
 from pydantic import Field
 
-from src.domain.base.dto.base import DTO
-
-
-class ChatDTO(DTO):
-    """Сущность чата"""
-    chat_id: int
-    title: str
-    is_super_group: bool
-    is_forum: bool
-    members_count: int
-    user_id: int
-    username: Optional[str]
-
-    def __repr__(self):
-        return f"Chat(id={self.chat_id}, title={self.title}, members={self.members_count})"
+from src.domain.base.dto import DTO, PatchDTO
 
 
 class ChatCreateDTO(DTO):
@@ -30,7 +16,14 @@ class ChatCreateDTO(DTO):
     username: Optional[str] = Field(None, max_length=32)
 
 
-class PatchChatData(DTO):
+class ChatDTO(ChatCreateDTO):
+    """Сущность чата"""
+    def __repr__(self):
+        return f"Chat(id={self.chat_id}, title={self.title}, " \
+               f"members={self.members_count})"
+
+
+class PatchChatData(PatchDTO):
     """Сущность для редактирования чата"""
     chat_id: int
     title: Optional[str] = Field(None, max_length=256)
@@ -39,17 +32,6 @@ class PatchChatData(DTO):
     members_count: Optional[int] = Field(None, ge=0)
     username: Optional[str] = Field(None, max_length=32)
     user_id: Optional[int] = Field(None, ge=0)
-
-    @property
-    def updated_data(self) -> dict:
-        new_user = self.model_dump()
-        new_data = {}
-
-        for key, value in new_user.items():
-            if value is not None:
-                new_data[key] = value
-
-        return new_data
 
 
 class ChatMigratedDTO(DTO):

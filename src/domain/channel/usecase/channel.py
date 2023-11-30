@@ -1,7 +1,6 @@
 from abc import ABC
 from typing import Optional
 from asyncpg.exceptions import CheckViolationError
-from sqlalchemy import (text)
 
 from src.domain.channel.interfaces.uow import IChannelUoW
 from src.domain.channel.dto import ChannelDTO, \
@@ -105,8 +104,7 @@ class ChannelService:
         return await RegisterChannel(uow=self.uow)(channel=channel)
 
     async def patch_channel(
-            self,
-            new_channel: PatchChannelData
+            self, new_channel: PatchChannelData
     ) -> ChannelDTO:
         return await PatchChannel(uow=self.uow)(new_channel=new_channel)
 
