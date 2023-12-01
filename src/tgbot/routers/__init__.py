@@ -1,17 +1,18 @@
-from aiogram import Router
+from aiogram import Router, Dispatcher
 
 from . import user, chat, channel, admin, error, unrecognized, owner
 
-router = Router(name="main_router")
+main_router = Router(name="main_router")
 
-router.include_router(user.router)
-router.include_router(channel.router)
-router.include_router(chat.router)
-router.include_router(admin.router)
-router.include_router(owner.router)
+main_router.include_router(user.router)
+main_router.include_router(channel.router)
+main_router.include_router(chat.router)
+main_router.include_router(admin.router)
+main_router.include_router(owner.router)
 
-router.include_router(unrecognized.router)
+main_router.include_router(unrecognized.router)
 # router.include_router(error.router)
 
 
-__all__ = ['router']
+def register_routers(dp: Dispatcher):
+    dp.include_router(main_router)

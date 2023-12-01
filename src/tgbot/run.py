@@ -15,7 +15,7 @@ from src.infrastructure.logging import setup_logger, logger
 from src.infrastructure.i18n import translator_hub
 from src.infrastructure.scheduler.apschedule import get_scheduler
 
-from src.tgbot.common.middleware import setup_middleware
+from src.tgbot.common.middleware import register_middleware
 from src.tgbot.common.misc.set_my_commands import set_bot_commands
 from src.tgbot.common.misc.notify_admins import on_startup_notify
 from src.tgbot.common.misc.jobs.autobackup import auto_backup
@@ -45,7 +45,7 @@ async def run_bot_polling() -> Never:
         )
         await scheduler.start_in_background()
 
-    setup_middleware(dp=dp, sm=database)
+    register_middleware(dp=dp, sm=database)
 
     try:
         await set_bot_commands(bot=bot, config=config)
@@ -82,7 +82,7 @@ def run_bot_webhook():
     dp = get_dispatcher(storage=storage)
     database = sa_sessionmaker(str(config.database.dsn))
 
-    setup_middleware(dp=dp, sm=database)
+    register_middleware(dp=dp, sm=database)
 
     dp.startup.register(on_startup)
 

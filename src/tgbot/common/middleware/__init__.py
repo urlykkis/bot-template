@@ -11,7 +11,7 @@ from .inner import \
     ThrottlingMiddleware, GlobalTimeoutMiddleware
 
 
-def setup_middleware(dp: Dispatcher, sm: sessionmaker, ignore_throttling: bool = False):
+def register_middleware(dp: Dispatcher, sm: sessionmaker, ignore_throttling: bool = False):
     dp.update.outer_middleware(LoggingMiddleware())
     dp.update.outer_middleware(ManagerMiddleware())
     dp.update.outer_middleware(DatabaseMiddleware(sm))

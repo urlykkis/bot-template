@@ -51,7 +51,8 @@ class RegisterChannel(ChannelUseCase):
 
 class PatchChannel(ChannelUseCase):
     """Редактирует канал и возвращает его новую сущность"""
-    async def __call__(self, new_channel: PatchChannelData) -> Optional[ChannelDTO]:
+    async def __call__(self, new_channel: PatchChannelData)\
+            -> Optional[ChannelDTO]:
         channel = await self.uow.channel.get_by_id(chat_id=new_channel.chat_id)
 
         if new_channel.title is not None:

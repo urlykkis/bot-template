@@ -9,7 +9,7 @@ from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.fsm.storage.memory import MemoryStorage, SimpleEventIsolation
 from aiogram.fsm.storage.redis import DefaultKeyBuilder, RedisStorage
 
-from src.tgbot.routers import router as main_router
+from src.tgbot.routers import register_routers
 from src.tgbot.common.middleware.request import RetryRequestMiddleware
 from src.infrastructure.settings import Config
 
@@ -46,8 +46,7 @@ def get_dispatcher(
         events_isolation=storage.events_isolation,
         **kwargs,
     )
-
-    dp.include_router(main_router)
+    register_routers(dp)
     return dp
 
 
