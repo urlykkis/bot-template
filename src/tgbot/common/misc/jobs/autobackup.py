@@ -14,15 +14,13 @@ async def backup_users(sm):
     """Создает файл с SQL-запросами для бэкапа таблицы user"""
     async with sm() as session:
         query = await session.execute(text("select * from users"))
-        f = open('./backup_users.sql', 'w', encoding="utf-8")
 
-        for row in query:
-            try:
-                f.write(f"insert into users values ({row});\n")
-            except Exception as e:
-                print('Error %s' % e)
-
-        f.close()
+        with open('./backup_users.sql', 'w', encoding="utf-8") as file:
+            for row in query:
+                try:
+                    f.write(f"insert into users values ({row});\n")
+                except Exception as e:
+                    print('Error %s' % e)
 
         return "./backup_users.sql"
 
