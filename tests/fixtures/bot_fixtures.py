@@ -7,6 +7,7 @@ from src.tgbot.common.factories import get_dispatcher, get_storage
 from src.infrastructure.database.core.session import sa_sessionmaker
 from src.tgbot.common.middleware import register_middleware
 
+
 @pytest_asyncio.fixture(scope="session")
 async def memory_storage(config):
     return get_storage(config)

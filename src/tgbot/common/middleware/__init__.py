@@ -1,4 +1,4 @@
-from aiogram import Dispatcher, Bot, F
+from aiogram import Dispatcher, F
 from aiogram.utils.chat_action import ChatActionMiddleware
 from sqlalchemy.orm import sessionmaker
 
@@ -8,7 +8,8 @@ from .outer import \
     LoggingMiddleware, ManagerMiddleware
 from .inner import \
     TranslatorRunnerMiddleware, UserMiddleware, \
-    ThrottlingMiddleware, GlobalTimeoutMiddleware
+    ThrottlingMiddleware, GlobalTimeoutMiddleware, \
+    AlbumMiddleware
 
 
 def register_middleware(dp: Dispatcher, sm: sessionmaker, ignore_throttling: bool = False):
@@ -27,3 +28,5 @@ def register_middleware(dp: Dispatcher, sm: sessionmaker, ignore_throttling: boo
 
     dp.message.middleware(GlobalTimeoutMiddleware())
     dp.message.middleware(ChatActionMiddleware())
+
+    dp.message.middleware(AlbumMiddleware())
