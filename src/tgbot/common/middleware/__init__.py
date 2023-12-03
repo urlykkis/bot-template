@@ -1,4 +1,4 @@
-from aiogram import Dispatcher, F
+from aiogram import Dispatcher
 from aiogram.utils.chat_action import ChatActionMiddleware
 from aiogram.utils.callback_answer import CallbackAnswerMiddleware
 from sqlalchemy.orm import sessionmaker
@@ -20,7 +20,6 @@ def register_middleware(dp: Dispatcher, sm: sessionmaker, ignore_throttling: boo
     dp.update.outer_middleware(ServicesMiddleware())
     dp.update.middleware(TranslatorRunnerMiddleware())
 
-    dp.message.filter(F.chat.type.in_({"private"}))
     dp.update.middleware(UserMiddleware())
 
     if ignore_throttling is False:
