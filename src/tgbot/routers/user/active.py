@@ -10,8 +10,7 @@ router = Router()
 
 
 @router.my_chat_member(
-    ChatMemberUpdatedFilter(member_status_changed=IS_NOT_MEMBER),
-    F.chat.type == "private",
+    ChatMemberUpdatedFilter(member_status_changed=IS_NOT_MEMBER)
 )
 async def user_blocked_bot(
         event: ChatMemberUpdated,
@@ -24,8 +23,7 @@ async def user_blocked_bot(
 
 
 @router.my_chat_member(
-    ChatMemberUpdatedFilter(member_status_changed=IS_MEMBER),
-    F.chat.type == "private",
+    ChatMemberUpdatedFilter(member_status_changed=IS_MEMBER)
 )
 async def user_unblocked_bot(
         event: ChatMemberUpdated,

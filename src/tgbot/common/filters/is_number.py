@@ -4,9 +4,8 @@ from aiogram.types import Message
 
 class NumberFilter(Filter):
     """Является ли текст числом"""
-    async def __call__(self, message: Message) -> bool:
+    async def __call__(self, message: Message) -> dict[str, float] | bool:
         try:
-            float(message.text)
-            return True
+            return {"number": float(message.text)}
         except (ValueError, Exception):
             return False

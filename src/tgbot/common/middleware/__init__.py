@@ -1,5 +1,6 @@
 from aiogram import Dispatcher, F
 from aiogram.utils.chat_action import ChatActionMiddleware
+from aiogram.utils.callback_answer import CallbackAnswerMiddleware
 from sqlalchemy.orm import sessionmaker
 
 
@@ -30,3 +31,4 @@ def register_middleware(dp: Dispatcher, sm: sessionmaker, ignore_throttling: boo
     dp.message.middleware(ChatActionMiddleware())
 
     dp.message.middleware(AlbumMiddleware())
+    dp.callback_query.middleware(CallbackAnswerMiddleware())
