@@ -1,16 +1,12 @@
 """Логирование"""
 from typing import List
-from enum import Enum
 
 import logging
 
 from loguru import logger
 
+from src.domain.enums.log_level import LogLevel
 
-class LogLevel(Enum):
-    INFO = "INFO"
-    ERROR = "ERROR"
-    DEBUG = "DEBUG"
 
 log_levels = [LogLevel.INFO, LogLevel.ERROR, LogLevel.DEBUG]
 log_format = "{time:MMMM D, YYYY > HH:mm:ss} | {level} | {message}"

@@ -52,3 +52,10 @@ class ChatRepository(SQLAlchemyRepository, IChatRepo):
             return True
         except IntegrityError as err:
             raise ChatDeleteException(err)
+
+    async def get_broadcast_recipients_ids(self) -> list[int]:
+        stmt = select(Chat.chat_id)
+        return list(await self.session.scalars(stmt))
+
+    async def count(self) -> int:
+        return await self.count_model(Chat)

@@ -7,7 +7,8 @@ from src.infrastructure.database.repositories.database \
 from src.domain.user.interfaces.persistence import IUserRepo
 from src.infrastructure.database.models import User
 from src.domain.user.exceptions import \
-    UserNotExists, UserAlreadyExists, UserEditException
+    UserNotExists, UserAlreadyExists, \
+    UserEditException, UserDeleteException
 
 
 class UserRepository(SQLAlchemyRepository, IUserRepo):
@@ -43,3 +44,19 @@ class UserRepository(SQLAlchemyRepository, IUserRepo):
             raise UserEditException(err)
 
         return user
+
+    async def delete_user(self, user: User) -> bool:
+        """Удаляет чат"""
+        try:
+            await self.session.delete(user)
+            await self.session.flush()
+            return True
+        except IntegrityError as err:
+            raise UserDeleteException(err)
+
+    async def count(self) -> int:
+        return await self.count_model(User)
+
+    async def get_broadcast_recipients_ids(self) -> list[int]:
+        stmt = select(User.user_id).filter(User.active == True)
+        return list(await self.session.scalars(stmt))

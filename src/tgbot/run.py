@@ -1,12 +1,14 @@
 import asyncio
+
 from typing import Never
 
 from aiohttp import web
 from aiogram import Bot
 from apscheduler.triggers.cron import CronTrigger
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, \
-    setup_application, TokenBasedRequestHandler
+    setup_application
 
+from src.domain.enums.log_level import LogLevel
 
 from src.infrastructure.settings.config import Config
 from src.infrastructure.database.core.session import sa_sessionmaker
@@ -25,15 +27,30 @@ from src.tgbot.common.factories import \
     get_storage, setup_shutdown_events
 
 
-async def run_bot_polling() -> Never:
-    """Запуск бота"""
-    setup_logger("DEBUG", ["aiogram.bot.api"])
+async def set_webhook(bot: Bot, config: Config) -> None:
+    webhook_path = f"{config.web.WEBHOOK_URL}{config.web.WEBHOOK_PATH}"
+    logger.debug(f"Webhook PATH: {webhook_path}")
+    await bot.set_webhook(webhook_path)
+
+
+def default_setup():
+    setup_logger(LogLevel.DEBUG.value, ["aiogram.bot.api"])
     config = load_config()
 
     bot = get_bot(config=config)
     storage = get_storage(config=config)
     dp = get_dispatcher(storage=storage)
     database = sa_sessionmaker(str(config.database.dsn))
+
+    register_middleware(dp=dp, sm=database)
+
+    return bot, dp, storage, config, database
+
+
+async def run_bot_polling() -> Never:
+    """Запуск бота"""
+    bot, dp, storage, config, database = default_setup()
+
     scheduler = await get_scheduler(config=config)
 
     async with scheduler:
@@ -44,8 +61,6 @@ async def run_bot_polling() -> Never:
             args=(bot, config, database),
         )
         await scheduler.start_in_background()
-
-    register_middleware(dp=dp, sm=database)
 
     try:
         await set_bot_commands(bot=bot, config=config)
@@ -65,26 +80,12 @@ async def run_bot_polling() -> Never:
         await setup_shutdown_events(dp=dp, bot=bot)
 
 
-async def on_startup(bot: Bot, config: Config, database) -> None:
-    webhook_path = f"{config.web.WEBHOOK_URL}{config.web.WEBHOOK_PATH}"
-    logger.debug(f"Webhook PATH: {webhook_path}")
-    await bot.set_webhook(webhook_path)
-
-
 def run_bot_webhook():
-    setup_logger("DEBUG")
+    bot, dp, storage, config, database = default_setup()
 
-    config = load_config()
-    bot = get_bot(config)
+    dp.startup.register(set_webhook)
+
     app = web.Application()
-
-    storage = get_storage(config)
-    dp = get_dispatcher(storage=storage)
-    database = sa_sessionmaker(str(config.database.dsn))
-
-    register_middleware(dp=dp, sm=database)
-
-    dp.startup.register(on_startup)
 
     webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot)
     webhook_requests_handler.register(app, path=config.web.WEBHOOK_PATH)

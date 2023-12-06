@@ -32,6 +32,20 @@ class UserDTO(UserCreateDTO):
     def href(self):
         return f"<a href='tg://user?id={self.user_id}'>{self.full_name}</a>"
 
+    @property
+    def referral_href(self):
+        return f"<a href='tg://user?id={self.referred}'>Приглашен этим человеком</a>"
+
+    @property
+    def i18n_user(self):
+        user_dump = self.model_dump()
+
+        user_dump["last_name"] = user_dump["last_name"] if user_dump["last_name"] is not None else ""
+        user_dump["ban"] = "Забанен" if user_dump["ban"] is True else "Не забанен"
+        user_dump["is_premium"] = "Да" if user_dump["is_premium"] is True else "Нет"
+        user_dump["referred"] = self.referral_href if user_dump["referred"] else "Нет"
+        return user_dump
+
 
 class PatchUserData(PatchDTO):
     """Сущность для редактирования пользователя"""

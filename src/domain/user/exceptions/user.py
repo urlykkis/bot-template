@@ -18,3 +18,7 @@ class UserAlreadyExists(UserException):
 
 class UserEditException(UserException):
     """Ошибка при редактировании пользователя в БД"""
+
+
+class UserDeleteException(UserException):
+    """Ошибка при удалении пользователя в БД"""
